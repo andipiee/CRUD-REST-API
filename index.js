@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require("express");
 const app = express();
 const mongoose = require('mongoose');
-const routes = require('./routes/routes');
+const routes = require('./routes/userRoutes');
 
 const mongodbUrl = process.env.DATABASE_URL;
 
@@ -14,16 +14,9 @@ app.get('/', (req, res) => {
 app.use(express.json());
 app.use('/api', routes);
 
-mongoose.connect(mongodbUrl);
-const database = mongoose.connection;
-
-database.on('error', (error) => {
-    console.log(error);
-});
-
-database.once('connected', () => {
-    console.log('Database Connected!');
-});
+mongoose.connect(mongodbUrl)
+    .then(() => console.log('Connected to Database'))
+    .catch((err) => console.error('error', err));
 
 app.listen(3000, () => {
     console.log('server is running')
